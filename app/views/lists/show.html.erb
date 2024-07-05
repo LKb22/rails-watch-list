@@ -3,5 +3,7 @@
 <ul>
   <% @list.movies.each do |movie| %>
     <li> <%= movie.title %> </li>
+    <% bookmark = Bookmark.find_by(list: @list, movie: movie) %>
+    <%= link_to "delete", bookmark_path(bookmark) %>
   <% end %>
 </ul>
