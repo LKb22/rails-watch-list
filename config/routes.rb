@@ -6,8 +6,15 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   root to: "lists#index"
-  resources :lists, except: [:edit, :update] do
-    resources :bookmarks, only: [:new, :create]
+  # get "lists", to: "lists#index"
+  # get "lists/new", to: "lists#new"
+  # post "lists", to: "lists#create"
+  # get "lists/:id", to: "lists#show", as: :list
+  # get "lists/:id/edit", to: "lists#edit"
+  # patch "lists/:id", to: "lists#update"
+  # delete "lists/:id", to: "lists#destroy"
+  resources :lists do
+    resources :bookmarks, except: :destroy
   end
-  resources :bookmarks, only: [:destroy]
+  resources :bookmarks, only: :destroy
 end
