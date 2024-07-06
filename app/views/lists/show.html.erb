@@ -2,8 +2,9 @@
 <ul>
   <% @list.movies.each do |movie| %>
     <li>
-      <%= movie.title %>
       <% bookmark = Bookmark.find_by(list: @list, movie: movie) %>
+      <%= movie.title %>
+      <%= bookmark.comment %>
       <%= link_to "Delete", bookmark_path(bookmark), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
       </li>
   <% end %>
@@ -11,5 +12,18 @@
 
 <%= link_to "Edit list", edit_list_path(@list) %>
 <%= link_to "Add a movie", new_list_bookmark_path(@list)  %>
-<%= link_to "delete", list_path(@list), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+<%= link_to "Add a review", new_list_review_path(@list)  %>
+<%= link_to "Delete list", list_path(@list), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
 <%= link_to "Back to all lists", root_path %>
+
+
+<h2> All reviews for <%= @list.name %> </h2>
+<ul>
+  <% @list.reviews.each do |review| %>
+    <li>
+      <%= review.comment %>
+      <%= review.rating %>
+      <%= link_to "Delete", review_path(review), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+      </li>
+  <% end %>
+</ul>
