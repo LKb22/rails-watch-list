@@ -1,12 +1,13 @@
 class ReviewsController < ApplicationController
+  before_action :set_list, only: [:new, :create]
+  before_action :set_review, only: [:edit, :update, :destroy]
+
   def new
     @review = Review.new
-    @list = List.find(params[:list_id])
   end
 
   def create
     @review = Review.new(review_params)
-    @list = List.find(params[:list_id])
     @review.list = @list
     if @review.save
       redirect_to list_path(@list)
@@ -16,11 +17,9 @@ class ReviewsController < ApplicationController
   end
 
   def edit
-    @review = Review.find(params[:id])
   end
 
   def update
-    @review = Review.find(params[:id])
     if @review.update(review_params)
       redirect_to list_path(@review.list)
     else
@@ -29,11 +28,19 @@ class ReviewsController < ApplicationController
   end
 
   def destroy
-    @review = Review.find(params[:id])
     @review.destroy
     redirect_to list_path(@review.list), status: :see_other
   end
+
   private
+
+  def set_list
+    @list = List.find(params[:list_id])
+  end
+
+  def set_review
+    @review = Review.find(params[:id])
+  end
 
   def review_params
     params.require(:review).permit(:comment, :rating)
