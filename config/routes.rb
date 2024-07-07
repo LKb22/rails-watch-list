@@ -14,9 +14,9 @@ Rails.application.routes.draw do
   # patch "lists/:id", to: "lists#update"
   # delete "lists/:id", to: "lists#destroy"
   resources :lists do
-    resources :bookmarks, except: :destroy
-    resources :reviews, only: [:new, :create]
+    resources :bookmarks, except: [:destroy, :edit, :update]
+    resources :reviews, except: [:destroy, :edit, :update]
   end
-  resources :bookmarks, only: :destroy
-  resources :reviews, only: :destroy
+  resources :bookmarks, only: [:destroy, :edit, :update]
+  resources :reviews, only: [:destroy, :edit, :update]
 end

@@ -1,6 +1,2 @@
-<h1> Write a review for <%= @list.name %> list </h1>
-<%= simple_form_for ([@list, @review]) do |f| %>
-  <%= f.input :comment, placeholder: 'Great list!' %>
-  <%= f.input :rating %>
-  <%= f.submit class: 'btn btn-flat' %>
-<% end %>
+<h3> Write a review for <%= @list.name %> list </h3>
+<%= render "form", review: @review %>
