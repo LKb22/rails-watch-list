@@ -1,31 +1,61 @@
-<h1> All movies for <%= @list.name %> </h1>
-<ul>
+<div class="position-relative">
+  <div class="card-category card-large">
+    <h1><%= @list.name %></h1>
+  </div>
+    <span class="movie-tag"><%= pluralize(@list.movies.size, "movie") %></span>
+</div>
+<div class="container mb-5">
+  <div class="d-flex justify-content-between my-4">
+    <span class="mb-2 d-block"><small><em class="text-muted"><%= "You haven't saved any movies yet!" if @list.movies.empty? %></em></small></span>
+    <div>
+      <%= link_to "Back to all lists", root_path, class: "btn btn-flat" %>
+      <%= link_to "Add a movie", new_list_bookmark_path(@list), class: "btn btn-flat" %>
+      <%= link_to "Edit list", edit_list_path(@list), class: "btn btn-flat" %>
+      <%= link_to "Delete list", list_path(@list), class: "btn btn-cancel", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this list?" } %>
+    </div>
+  </div>
+</div>
+<div class="row my-2">
   <% @list.movies.each do |movie| %>
-    <li>
-      <% bookmark = Bookmark.find_by(list: @list, movie: movie) %>
-      <%= movie.title %>
-      <%= bookmark.comment %>
-      <%= link_to "Edit", edit_bookmark_path(bookmark) %>
-      <%= link_to "Delete", bookmark_path(bookmark), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-      </li>
+    <% bookmark = Bookmark.find_by(list: @list, movie: movie) %>
+    <div class="col-12 col-sm-6 mb-4" data-aos="zoom-in">
+      <div class="bg-white rounded shadow h-100">
+        <%= image_tag movie.poster_url, alt: movie.title, class: "movie-img rounded-top" %>
+        <div class="p-3 rounded-bottom d-flex flex-column">
+          <strong><%= movie.title %> <span class="text-muted font-weight-normal">• <%= movie.rating %> <i class="fas fa-star star-yellow"></i></span></strong>
+          <small class="text-muted"><%= movie.overview %></small>
+          <div class="d-flex align-items-end justify-content-between pt-4">
+            <div>
+              <i class="fas fa-quote-left me-2"></i><small class="flex-grow-1"><%= bookmark.comment %></small>
+            </div>
+            <small class="text-right flex-shrink-0"> <%= link_to "edit", edit_bookmark_path(bookmark) %> <%= link_to "delete", bookmark_path(bookmark), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove #{movie.title} from your #{@list.name} list"}, class: 'text-danger' %></small>
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
-</ul>
-
-<%= link_to "Edit list", edit_list_path(@list) %>
-<%= link_to "Add a movie", new_list_bookmark_path(@list)  %>
-<%= link_to "Add a review", new_list_review_path(@list)  %>
-<%= link_to "Delete list", list_path(@list), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
-<%= link_to "Back to all lists", root_path %>
-
-
-<h2> All reviews for <%= @list.name %> </h2>
-<ul>
-  <% @list.reviews.each do |review| %>
-    <li>
-      <%= review.comment %>
-      <%= review.rating %>
-      <%= link_to "Edit", edit_review_path(review) %>
-      <%= link_to "Delete", review_path(review), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
-      </li>
-  <% end %>
-</ul>
+</div>
+<hr class="my-5">
+  <div class="row">
+    <div class="col-12 col-sm-6">
+      <div class="d-flex align-items-end justify-content-between pt-4">
+        <h3>Reviews</h3>
+        <%= link_to "Add a review", new_list_review_path(@list), class: "btn btn-primary" %>
+      </div>
+      <hr>
+      <% if @list.reviews.empty? %>
+        <small><em class="text-muted">Be the first one to review this list</em></small>
+      <% end %>
+      <% @list.reviews.each do |review| %>
+        <div>
+          <% review.rating.to_i.times do %>
+            <i class="fas fa-star star-yellow"></i>
+          <% end %>
+          <small><em class="text-muted"><%= distance_of_time_in_words_to_now(review.created_at) %> ago</em></small>
+          <p class="mb-3 pt-2"><%= review.comment %></p>
+        </div>
+        <hr>
+      <% end %>
+    </div>
+  </div>
+</div>
